@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebBanSach.Models;
+using PagedList;
+using PagedList.Mvc;
 
 namespace WebBanSach.Areas.Admin.Controllers
 {
@@ -12,9 +14,11 @@ namespace WebBanSach.Areas.Admin.Controllers
         dbWebBanSachDataContext data = new dbWebBanSachDataContext();
 
         // GET: Admin/Admin
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var GetAll = data.QUANTRIVIENs.ToList();
+            int pageNumber = (page ?? 1); // Tuong duong pageNumber = page != null ? page : 1;
+            int pageSize = 7;
+            var GetAll = data.QUANTRIVIENs.ToList().OrderBy(a => a.MaQTV).ToPagedList(pageNumber,pageSize);
             return View(GetAll);
         }
 
@@ -59,9 +63,16 @@ namespace WebBanSach.Areas.Admin.Controllers
             return Edit(qtv.MaQTV);
         }
 
-        public ActionResult Delete()
+        public ActionResult Delete(int id)
         {
-            return View();
+            var qtv = data.QUANTRIVIENs.SingleOrDefault(a => a.MaQTV == id);
+            if (qtv == null)
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            data.QUANTRIVIENs.DeleteOnSubmit(qtv);
+            data.SubmitChanges();
+            return RedirectToAction("Index", "Admin", new { area = "Admin" });
         }
 
 

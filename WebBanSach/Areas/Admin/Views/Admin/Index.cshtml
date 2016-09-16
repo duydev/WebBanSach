@@ -1,46 +1,61 @@
-﻿@model IEnumerable<WebBanSach.Models.QUANTRIVIEN>
+﻿@using WebBanSach.Models
+@using PagedList.Mvc
+@model PagedList.PagedList<WebBanSach.Models.QUANTRIVIEN>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quản Lý Quản Trị Viên";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TenDangNhap)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MatKhau)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.HoTen)
-        </th>
-        <th></th>
-    </tr>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Bordered Table</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <p>
+                    @Html.ActionLink("Thêm Mới", "Create")
+                </p>
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().TenDangNhap)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().HoTen)
+                        </th>
+                        <th></th>
+                    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TenDangNhap)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MatKhau)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HoTen)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MaQTV }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MaQTV }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MaQTV })
-        </td>
-    </tr>
-}
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TenDangNhap)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HoTen)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Sửa", "Edit", new { id = item.MaQTV }) |
+                                @Html.ActionLink("Xóa", "Delete", new { id = item.MaQTV }, new { onclick = "return confirm('Bạn có chắc chắn muốn xóa người này?');" })
+                            </td>
+                        </tr>
+                    }
 
-</table>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <div class="pull-right">@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))</div>
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+
