@@ -20,24 +20,43 @@ namespace WebBanSach.Areas.Admin.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            QUANTRIVIEN qtv = new QUANTRIVIEN();
+            return View(qtv);
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection fc, QUANTRIVIEN qtv)
+        public ActionResult Create(QUANTRIVIEN qtv)
         {
             if(ModelState.IsValid)
             {
                 data.QUANTRIVIENs.InsertOnSubmit(qtv);
                 data.SubmitChanges();
-                RedirectToAction("Index", "Admin", new { area = "Admin" });
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
             }
             return Create();
         }
 
-        public ActionResult Edit()
+        public ActionResult Edit(int id)
         {
-            return View();
+            var qtv = data.QUANTRIVIENs.SingleOrDefault(a => a.MaQTV == id);
+            if(qtv == null)
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            return View(qtv);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, QUANTRIVIEN qtv)
+        {
+            if (ModelState.IsValid)
+            {
+                var _qtv = data.QUANTRIVIENs.Single(a => a.MaQTV == id);
+                UpdateModel(_qtv);
+                data.SubmitChanges();
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            return Edit(qtv.MaQTV);
         }
 
         public ActionResult Delete()
